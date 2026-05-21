@@ -13,6 +13,12 @@ INPUT_DIR = "image_/groupeA"
 emotion_detector = FER(mtcnn=True)
 
 def single_face(img,result):
+        
+        """
+        Fonction qui va permettre de récupérer d'analyser un visage sur l'image, extraire les émotions avec le score, 
+        afficher un carré qui identifie le visage et afficher les émotions prédite par l'algorithme.
+
+        """
         bounding_box = result[0]["box"]
         emotions = result[0]["emotions"]
         emotion_final = max(emotions, key=emotions.get)
@@ -37,31 +43,37 @@ def single_face(img,result):
 
 
 def multiple_faces(img,result):
-      
-    for i , faces in enumerate(result):
-            bounding_box = faces['box']
-            emotions = faces['emotions']
-            emotion_final = max(emotions, key=emotions.get)
-            score_final = max(emotions.values())
-            print(f"Emotion predicted {emotion_final} and emotion score is {score_final}")
+        """
+        Fonction qui va permettre de récupérer l'image et d'analyser plusieurs visages sur l'image, extraire les émotions avec le score, 
+        afficher un carré qui identifie le visage et afficher les émotions prédite par l'algorithme.
 
-            cv2.rectangle(img,(
-                bounding_box[0], bounding_box[1]),(
-                    bounding_box[0] + bounding_box[2],bounding_box[1] + bounding_box[3]),
-                (0, 155, 255), 1,)
-            
-            
-            emotion_name, score = emotion_detector.top_emotion(img)
+        """
 
-            for index, (emotion_name, score) in enumerate(emotions.items()):
-                color = (0,0,0) if score < 0.01 else (211,211,211)
-                emotion_score = "{}: {}".format(emotion_name,"{:.2f}".format(score))
+    #Extraction des visagaes et des scores des émotions qui sont présents sur la photo.  
+        for i , faces in enumerate(result):
+                bounding_box = faces['box']
+                emotions = faces['emotions']
+                emotion_final = max(emotions, key=emotions.get)
+                score_final = max(emotions.values())
+                print(f"Emotion predicted {emotion_final} and emotion score is {score_final}")
 
-                cv2.putText(img,emotion_score,
-                            (bounding_box[0], bounding_box[1] + bounding_box[3] + 30 + index * 30),
-                            cv2.FONT_HERSHEY_SIMPLEX,1,color,3,cv2.LINE_AA,)
+                cv2.rectangle(img,(
+                    bounding_box[0], bounding_box[1]),(
+                        bounding_box[0] + bounding_box[2],bounding_box[1] + bounding_box[3]),
+                    (0, 155, 255), 1,)
                 
-    return img
+                
+                emotion_name, score = emotion_detector.top_emotion(img)
+
+                for index, (emotion_name, score) in enumerate(emotions.items()):
+                    color = (0,0,0) if score < 0.01 else (211,211,211)
+                    emotion_score = "{}: {}".format(emotion_name,"{:.2f}".format(score))
+
+                    cv2.putText(img,emotion_score,
+                                (bounding_box[0], bounding_box[1] + bounding_box[3] + 30 + index * 30),
+                                cv2.FONT_HERSHEY_SIMPLEX,1,color,3,cv2.LINE_AA,)
+                
+        return img
 
 
 #liste pour récolter les scores des émotion.
