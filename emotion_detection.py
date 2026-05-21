@@ -78,7 +78,7 @@ for file_name in Path(INPUT_DIR).iterdir():
         print(file_name)
 
         #verification du nombre de visage sur la photo. 
-        #si elle est supérieur à 1, fonction pour identifier tous les visages. 
+        #si elle est supérieur à 1, appelle de la fonction pour identifier plusieurs visages. 
         if len(result) > 1:
             img = multiple_faces(img,result)
             cv2.imwrite("emotion.jpg", img)
