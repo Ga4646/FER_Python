@@ -102,3 +102,8 @@ for file_name in Path(INPUT_DIR).iterdir():
         # si le nombre de visage est inférieur à 1 on utilise la fonction single_face
         else:
             img = single_face(img,result)
+            cv2.imwrite("emotion.jpg", img)
+            result_image = mpimg.imread('emotion.jpg') 
+            imgplot = plt.imshow(result_image)
+            # Display Output Image
+            plt.show()
